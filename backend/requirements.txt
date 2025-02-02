@@ -1,0 +1,5 @@
+google-generativeai
+fastapi
+pydub
+SpeechRecognition
+pydantic
