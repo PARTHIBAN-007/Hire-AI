@@ -44,7 +44,7 @@ class LLM_interviewer():
         ask only one question which should ask the background 
         return the response in lowercase format 
         output format : 
-        response - "Can you tell me about your background in machine learning, including your experience, projects, and skills?"
+        response -
         
         '''
         self.intro_prompt = '''you are an AI assistant designed to ask Questions about an aspirant for the {role}.
@@ -85,7 +85,6 @@ class LLM_interviewer():
         response - "It looks like there may have been a misunderstanding of the question. In linear regression, we typically interpret the coefficients as the impact each predictor has on the target variable.Could you give an example of how you'd interpret a coefficient in the context of a real-world dataset?"
         Note : 
         Ask Relevant Question to the topic
-        Ask Only One Question at a time
         return the response in lowercase format
         '''   
 
@@ -113,13 +112,13 @@ class LLM_interviewer():
             -question 
             -response
             -accuracy
-            -improvisedresponse
+            -improvised_response
 
         Example Response :
         -question : How do you handle class imbalance in a fraud detection model?
         -response : I would use SMOTE to oversample fraudulent transactions and adjust class weights in the model to focus more on detecting fraud.
         -accuracy : 85%
-        -improvisedresponse : To handle class imbalance, I would apply SMOTE to create synthetic samples for fraudulent transactions and adjust the class weights in the model to penalize false negatives more heavily. I’d also experiment with ensemble methods like EasyEnsemble to improve performance. For evaluation, I’d prioritize metrics such as Precision-Recall AUC and F1-score rather than accuracy, as they provide better insight into the model’s ability to detect fraud.
+        -improvised_response : To handle class imbalance, I would apply SMOTE to create synthetic samples for fraudulent transactions and adjust the class weights in the model to penalize false negatives more heavily. I’d also experiment with ensemble methods like EasyEnsemble to improve performance. For evaluation, I’d prioritize metrics such as Precision-Recall AUC and F1-score rather than accuracy, as they provide better insight into the model’s ability to detect fraud.
         '''
 
     def llm_config(self):

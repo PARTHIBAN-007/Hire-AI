@@ -55,7 +55,7 @@ export default function EvaluationPage() {
               <p className="mb-3 text-gray-500">{answer.accuracy || "Not available"}</p>
 
               <h3 className="text-md font-medium text-purple-600">Improvised Response:</h3>
-              <p className="text-gray-500">{answer.improvisedresponse || "No improvised response available"}</p>
+              <p className="text-gray-500">{answer.improvised_response }</p>
             </div>
           ))
         ) : (
