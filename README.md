@@ -29,7 +29,7 @@ Before running the project, make sure you have the following installed on your s
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/yourusername/Hire_AI.git
+git clone https://github.com/PARTHIBAN-007/Hire_AI.git
 cd Hire-AI
 ```
 
