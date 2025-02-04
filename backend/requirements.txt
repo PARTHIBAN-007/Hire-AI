@@ -1,5 +1,7 @@
 google-generativeai
 fastapi
+uvicorn
+python-dotenv
 pydub
 SpeechRecognition
 pydantic

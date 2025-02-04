@@ -188,7 +188,6 @@ class LLM_interviewer():
     
     def interview_topic(self,iter):
         ind = (iter-self.CommunicationQns-1)//self.NTQuestions
-        print(iter,self.CommunicationQns , self.NTQuestions , ind ,len(self.topics))
         return self.topics[ind]
       
 

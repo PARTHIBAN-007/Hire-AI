@@ -65,40 +65,31 @@ class UserResponse(BaseModel):
 async def llm_question(user_response : UserResponse):
     print(user_response.iter)
     if user_response.iter==0:
-        print("Welcome")
         prompt = llm_instance.llm_welcome_prompt_format()
-        print(prompt)
         response = llm_instance.llm_qn_generate(prompt)
         llm_instance.LLMQuestions.append(response)
         return JSONResponse(content=json.loads(response))
     elif user_response.iter>0 and user_response.iter<=llm_instance.CommunicationQns:
-        print("Communication")
         llm_instance.UserResponses.append(user_response.response)
         previous_question , answer_to_previous_answer = llm_instance.responses()
-        print(previous_question , answer_to_previous_answer)
         prompt = llm_instance.llm_intro_prompt_format(previous_question,answer_to_previous_answer)
-        print(prompt)
         response = llm_instance.llm_qn_generate(prompt)
         llm_instance.LLMQuestions.append(response)
         return JSONResponse(content=json.loads(response))
     elif user_response.iter>llm_instance.CommunicationQns and user_response.iter<llm_instance.NQuestions : 
-        print("Questions")
         llm_instance.UserResponses.append(user_response.response)
         previous_question , answer_to_previous_answer = llm_instance.responses()
         difficulty = llm_instance.level()
         topic = llm_instance.interview_topic(user_response.iter)
         prompt = llm_instance.llm_qn_prompt_format(previous_question,answer_to_previous_answer,topic,difficulty)
-        print(prompt)
         response = llm_instance.llm_qn_generate(prompt)
         llm_instance.LLMQuestions.append(response)
         return JSONResponse(content=json.loads(response))
     else:
         llm_instance.UserResponses.append(user_response.response)
         previous_question , answer_to_previous_answer = llm_instance.responses()
-        print(previous_question , answer_to_previous_answer)
         prompt = llm_instance.llm_conclusion_prompt_format(previous_question,answer_to_previous_answer)
         response = llm_instance.llm_qn_generate(prompt)
-        print(response)
         return JSONResponse(content=json.loads(response))
 
 class Evaluator(BaseModel):
@@ -107,11 +98,8 @@ class Evaluator(BaseModel):
 
 @app.post("/evaluate_responses")
 async def evaluate_responses(evaluator : Evaluator):
-    print(evaluator.iter)
     prompt = llm_instance.evaluator_prompt_format()
-    print(prompt)
     response = llm_instance.llm_qn_generate(prompt)
-    print(response)
     return JSONResponse(content=json.loads(response))
 
 
