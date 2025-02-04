@@ -53,7 +53,7 @@ Navigate to the backend directory:
 ```bash
 cd backend
 ```
-create a .env file and setup up your Gemini API Key:
+Create a .env file and setup up your Gemini API Key:
 ```bash
 GEMINI_API_KEY = ""
 ```
