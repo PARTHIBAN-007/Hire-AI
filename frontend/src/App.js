@@ -29,22 +29,27 @@ function App() {
   const predefinedRole = "Machine Learning Engineer";
   const mediaRecorderRef = useRef(null);
   const audioChunksRef = useRef([]);
+  const audioRef = useRef(new Audio());
 
   const availableTopics = [
-    "Linear Regression",
-    "Gradient Descent",
+    "Statistics",
+    "Hypothesis Testing",
+    "SQL",
     "Data Analysis",
     "Data Manipulation",
-    "Transformers",
-    "Random Forest",
-    "Decision Tree",
-    "Deep Learning",
-    "Statistics",
+    "Feature Engineering",
+    "Linear Regression",
     "Regularization",
+    "Decision Tree",
+    "Random Forest",
+    "Supervised Learning",
+    "Unsupervised Learning",
     "Neural Networks",
-    "Hypothesis Testing",
     "Natural Language Processing",
+    "Transformers",
     "Large Language Model",
+    "Retrieval Augmented Generation",
+    "FineTuning",
   ];
 
   // Helper function to capitalize the first letter
@@ -79,6 +84,9 @@ function App() {
     } catch (err) {
       console.error("Error submitting form:", err);
       setChatError("Error submitting form. Please try again.");
+      setTimeout(() => {
+        setChatError(null); // Clear the error after 5 seconds
+      }, 5000);
     }
   };
 
@@ -93,18 +101,29 @@ function App() {
         iter: currentIter,
         topics: selectedTopics,
       });
+      console.log(res);
       const message = res.data.response || "No response received";
       setMessages((prev) => [
         ...prev,
         { role: "assistant", text: capitalizeWords(message) },
       ]);
       setIter(currentIter + 1);
+      // Play audio for the assistant's message
+      playAudio(message);
     } catch (err) {
       console.error("Error fetching message:", err);
       setChatError("There was an issue fetching the response.");
+      setTimeout(() => {
+        setChatError(null); // Clear the error after 5 seconds
+      }, 5000);
     } finally {
       setChatLoading(false);
     }
+  };
+
+  const playAudio = (message) => {
+    const msgToSpeech = new SpeechSynthesisUtterance(message);
+    window.speechSynthesis.speak(msgToSpeech);
   };
 
   // Start audio recording using MediaRecorder API
@@ -182,30 +201,38 @@ function App() {
   };
 
   // ------------- EVALUATION STAGE -------------
-  // When stage becomes "evaluation", fetch evaluation data
-  useEffect(() => {
-    if (stage === "evaluation") {
-      const fetchEvaluationData = async () => {
-        setEvalLoading(true);
-        try {
-          const response = await fetch("http://127.0.0.1:8000/evaluate_responses", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ iter: 0 }),
-          });
-          const data = await response.json();
-          console.log("Fetched evaluation data:", data);
-          setEvaluationData(data.answers || []);
-        } catch (error) {
-          console.error("Error fetching evaluation data:", error);
-          setEvalError("Error fetching evaluation data.");
-        } finally {
-          setEvalLoading(false);
-        }
-      };
-      fetchEvaluationData();
-    }
+    useEffect(() => {
+      if (stage === "evaluation") {
+        const fetchEvaluationData = async () => {
+          setEvalLoading(true);
+          try {
+            const response = await fetch("http://127.0.0.1:8000/evaluate_responses", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({ iter: iter }), // Ensure correct iteration
+            });
+
+            const data = await response.json();
+            console.log("Fetched evaluation data:", data); // Debugging step
+
+            // Ensure correct key is accessed
+            if (data && data.answers) {
+              setEvaluationData(data.answers);
+            } else {
+              throw new Error("Invalid response structure");
+            }
+          } catch (error) {
+            console.error("Error fetching evaluation data:", error);
+            setEvalError("Error fetching evaluation data.");
+          } finally {
+            setEvalLoading(false);
+          }
+        };
+
+        fetchEvaluationData();
+      }
   }, [stage]);
+  
 
   // ------------- RENDER -------------
   return (
@@ -219,21 +246,28 @@ function App() {
       {stage === "home" && (
         <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-5xl">
           <h1 className="text-3xl font-bold mb-6 text-center text-gray-900">
-            AI Mock Interviewer
+            HireAI
           </h1>
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          {/* Centered Role */}
+          <div className="text-center mb-6">
+            <h2 className="text-xl font-semibold text-gray-800">Role</h2>
+            <p className="text-gray-600">{predefinedRole}</p>
+          </div>
+          {/* Topics in 3 columns */}
+          <div className="grid grid-cols-3 gap-4 mb-6">
             {availableTopics.map((topic) => (
-              <button
-                key={topic}
-                onClick={() => handleTopicClick(topic)}
-                className={`px-4 py-2 border rounded transition duration-300 ${
-                  selectedTopics.includes(topic)
-                    ? "bg-blue-500 text-white"
-                    : "bg-gray-200 text-gray-800 hover:bg-blue-400"
-                }`}
-              >
-                {topic}
-              </button>
+              <div key={topic}>
+                <button
+                  onClick={() => handleTopicClick(topic)}
+                  className={`px-4 py-2 border rounded transition duration-300 ${
+                    selectedTopics.includes(topic)
+                      ? "bg-blue-500 text-white"
+                      : "bg-gray-200 text-gray-800 hover:bg-blue-400"
+                  } w-full`}
+                >
+                  {topic}
+                </button>
+              </div>
             ))}
           </div>
           <button
@@ -248,7 +282,7 @@ function App() {
       {stage === "chat" && (
         <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-5xl">
           <h1 className="text-3xl font-bold mb-6 text-center text-gray-900">
-            Chat Interface
+            HireAI 
           </h1>
           <div className="h-[550px] overflow-y-auto border border-gray-300 rounded-lg p-6 bg-gray-50 w-full">
             {messages.length > 0 ? (
@@ -271,7 +305,7 @@ function App() {
             )}
           </div>
           <div className="flex items-center mt-6 space-x-4 justify-center">
-            {iter != numQuestions+1 && (
+            {iter !== numQuestions + 1 && (
               <button
                 onClick={isRecording ? stopRecording : startRecording}
                 className={`px-6 py-3 rounded-lg text-base font-medium transition ${
@@ -284,7 +318,10 @@ function App() {
               </button>
             )}
             {chatLoading && (
-              <span className="text-gray-600 text-base">Loading...</span>
+              <div className="flex justify-center items-center space-x-2">
+                <div className="w-8 h-8 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+                <span className="text-gray-600">Loading...</span>
+              </div>
             )}
           </div>
           {/* Show Report Evaluation button when conversation is complete */}
@@ -302,20 +339,20 @@ function App() {
       )}
 
       {stage === "evaluation" && (
-        <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
+        <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-5xl">
+          <h1 className="text-3xl font-bold mb-6 text-center text-gray-900">
+            HireAI Evaluation Report
+          </h1>
           {evalLoading ? (
-            <div className="flex justify-center items-center min-h-screen text-gray-500">
-              Loading...
+            <div className="flex justify-center items-center">
+              <div className="w-8 h-8 border-4 border-t-4 border-blue-500 rounded-full animate-spin"></div>
+              <span className="text-gray-600 ml-3">Loading Evaluation...</span>
             </div>
           ) : evalError ? (
-            <div className="flex justify-center items-center min-h-screen text-red-500">
-              {evalError}
-            </div>
+            <div className="text-red-600">{evalError}</div>
           ) : (
-            <div className="bg-white shadow-xl rounded-xl p-6 w-full max-w-2xl">
-              <h1 className="text-3xl font-semibold text-gray-800 mb-6 text-center">
-                Evaluation Report
-              </h1>
+            <div className="bg-white shadow-xl rounded-xl p-6 w-full ">
+              
               {evaluationData.length > 0 ? (
                 evaluationData.map((answer, index) => (
                   <div
@@ -328,19 +365,19 @@ function App() {
                     <p className="mb-3 text-gray-600">
                       {answer.question || "No question available"}
                     </p>
-                    <h3 className="text-md font-medium text-green-600">
+                    <h3 className="text-md font-medium text-sky-600">
                       Response:
                     </h3>
                     <p className="mb-3 text-gray-500">
                       {answer.response || "No response provided"}
                     </p>
-                    <h3 className="text-md font-medium text-blue-600">
+                    <h3 className="text-md font-medium text-yellow-600">
                       Accuracy:
                     </h3>
                     <p className="mb-3 text-gray-500">
                       {answer.accuracy || "Not available"}
                     </p>
-                    <h3 className="text-md font-medium text-purple-600">
+                    <h3 className="text-md font-medium text-green-600">
                       Improvised Response:
                     </h3>
                     <p className="text-gray-500">
@@ -354,6 +391,7 @@ function App() {
                 </div>
               )}
             </div>
+
           )}
         </div>
       )}

@@ -71,7 +71,7 @@ async def llm_question(user_response : UserResponse):
         response = llm_instance.llm_qn_generate(prompt)
         llm_instance.LLMQuestions.append(response)
         return JSONResponse(content=json.loads(response))
-    if user_response.iter>0 and user_response.iter<=llm_instance.CommunicationQns:
+    elif user_response.iter>0 and user_response.iter<=llm_instance.CommunicationQns:
         print("Communication")
         llm_instance.UserResponses.append(user_response.response)
         previous_question , answer_to_previous_answer = llm_instance.responses()
@@ -81,7 +81,7 @@ async def llm_question(user_response : UserResponse):
         response = llm_instance.llm_qn_generate(prompt)
         llm_instance.LLMQuestions.append(response)
         return JSONResponse(content=json.loads(response))
-    elif user_response.iter>llm_instance.CommunicationQns and user_response.iter<=llm_instance.NQuestions : 
+    elif user_response.iter>llm_instance.CommunicationQns and user_response.iter<llm_instance.NQuestions : 
         print("Questions")
         llm_instance.UserResponses.append(user_response.response)
         previous_question , answer_to_previous_answer = llm_instance.responses()

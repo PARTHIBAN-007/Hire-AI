@@ -9,10 +9,10 @@ class LLM_interviewer():
     def __init__(self,Role = "Machine Learning",Topics = ["Linear Regression","Neural Network"]):
         self.role = Role
         self.topics = Topics
-        self.NTQuestions = 1 #No of Questions on Each Topics
+        self.NTQuestions = 2 #No of Questions on Each Topics
         self.NTopics = len(Topics)
-        self.CommunicationQns = 1 #No of Questions on Communcations(Relevant to user answers and previous Questions)
-        self.NQuestions = self.NTQuestions * self.NTopics + self.CommunicationQns
+        self.CommunicationQns = 2 #No of Questions on Communcations(Relevant to user answers and previous Questions)
+        self.NQuestions = self.NTQuestions * self.NTopics + self.CommunicationQns + 1
         self.LLMQuestions = []
         self.difficulty = ["Easy","Medium","Hard"]
         self.UserResponses = []
@@ -24,10 +24,6 @@ class LLM_interviewer():
         if not gemini_api_key:
             print("Error: GEMINI_API_KEY not found in environment variables!")
             return
-
-        print("LLM Initialization")
-        print(f"Gemini API Key: {gemini_api_key}")
-
         try:
             genai.configure(api_key=gemini_api_key)
             print("Gemini API configured successfully!")
@@ -115,10 +111,10 @@ class LLM_interviewer():
             -improvised_response
 
         Example Response :
-        -question : How do you handle class imbalance in a fraud detection model?
-        -response : I would use SMOTE to oversample fraudulent transactions and adjust class weights in the model to focus more on detecting fraud.
+        -question : How do you improve text classification accuracy in a sentiment analysis model?
+        -response :  I would preprocess the text by removing stopwords, stemming, and using TF-IDF for feature extraction, then train a logistic regression model.
         -accuracy : 85%
-        -improvised_response : To handle class imbalance, I would apply SMOTE to create synthetic samples for fraudulent transactions and adjust the class weights in the model to penalize false negatives more heavily. I’d also experiment with ensemble methods like EasyEnsemble to improve performance. For evaluation, I’d prioritize metrics such as Precision-Recall AUC and F1-score rather than accuracy, as they provide better insight into the model’s ability to detect fraud.
+        -improvised_response :To improve accuracy, I would clean the text by removing stopwords, use TF-IDF for feature extraction, and try more advanced models like BERT. I’d also fine-tune the model and check its performance using metrics like accuracy and F1-score.
         '''
 
     def llm_config(self):
