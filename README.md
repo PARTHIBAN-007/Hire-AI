@@ -71,35 +71,7 @@ The backend API will be running at http://localhost:8000.
 5. Testing the Application
 Once both the frontend and backend are running, open your browser and go to http://localhost:3000 to interact with the application.
 
-# How It Works
 
-The **HIre_AI** mock interview platform is designed to guide users through a simulated interview process with AI-generated questions. Here's a detailed breakdown of how it works:
-
-## 1. Topic Selection Page
-
-- **Select Topics**: Users can choose multiple topics (e.g., "Linear Regression", "Deep Learning", etc.) by clicking on the respective buttons.
-- **Deselect Topics**: If users want to remove a topic, they can click the selected button again to deselect it.
-- **Start Interview**: Once topics are selected, users can click the **"Start Interview"** button to begin the mock interview session.
-
-## 2. AI Mock Interview
-
-- **Question Generation**: Based on the selected topics, the AI generates a series of questions for the mock interview. 
-- **Speech Input**: By speaking responses using the integrated speech-to-text feature.
-- **AI Interaction**: The AI processes the user’s answer and proceeds to the next question until the interview session is complete.
-
-## 3. Speech-to-Text Integration
-
-- **Voice Recording**: Users can record their voice responses using the app's integrated speech-to-text feature.
-- **Transcription**: The recorded audio is sent to the backend for transcription using a speech-to-text service.
-- **AI Interaction**: The transcribed text is then used to interact with the AI for the next part of the interview.
-
-## 4. Evaluation
-
-- **Report Evaluation**: After the interview is completed, users can click the **"Report Evaluation"** button to generate a feedback report on their performance.
-- **Evaluation Contents**:
-  - **Accuracy of Responses**: The AI evaluates the correctness of the user’s answers.
-  - **Suggestions for Improvement**: Provides tips on how users can improve their responses.
-  - **Score**: Users are given a score based on the quality and relevance of their responses during the interview.
 
 ## Contributing
 
